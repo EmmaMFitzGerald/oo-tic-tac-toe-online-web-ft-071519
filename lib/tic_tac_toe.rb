@@ -25,17 +25,17 @@ class TicTacToe
     puts " #{@board[6]} | #{@board[7]} | #{@board[8]} "
   end
   
-  def input_to_index(players_number)
-    players_number = players_number.to_i 
-    @board_number = players_number - 1
+  def input_to_index(input)
+   input.to_i - 1
   end
   
-  def move(players_move, token = X)
-    @board[players_move] = token
+  def move(index, token = "X")
+    @board[index] = token
   end
   
   
   def position_taken?(index)
+   index = index.to_i
    if (@board[index] == " ") || (@board[index] == "") || (@board[index] == nil)
       return false 
    else
@@ -44,6 +44,7 @@ class TicTacToe
   end 
   
   def valid_move?(index)
+    index = index.to_i
     if index.between?(0,8) && !position_taken?(index)
       return true
     else
@@ -52,22 +53,37 @@ class TicTacToe
   end
   
   def turn_count
-    @board.length
+    counter = 0 
+    board.each do |grid|
+      if grid  == "X" || grid == "O"
+      counter += 1  
+      end
+    end
+    counter
   end
   
-  def turn
-    puts "Pick a number between 1 and 9"
-    user_number = gets 
-    user_number.chomp
-    input_to_index(user_number)
-    valid_move(index)
-    if valid_move
-      move 
-      @board 
+  def current_player
+    turn_count % 2 == 0 ? "X" : "O"
+  end
+  
+  def turn 
+    puts "Please enter 1-9"
+    input = gets.strip
+    index = input_to_index(input)
+    if valid_move?(index)
+      move(index, token = "X")
+      turn_count
+      current_player
     else 
       puts "Try again"
+      turn
     end
+    display_board
   end
 
+  def won?
+    if @board.include? WIN_COMBINATIONS
+      
+  end
   
 end
